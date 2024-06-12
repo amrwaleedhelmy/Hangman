@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
+#include <set>
 
 using namespace std;
 
@@ -19,27 +21,35 @@ int charcount(const char* x) {
 
 void game(const char* y) {
     int size = charcount(y);
-    char temparr[20];  // Increased size to handle larger words
-    int loopcount = 0;
+    vector<char> temparr(size, '_');
+    set<char> guessedLetters;
+    int correctGuesses = 0;
     int wrngcount = 0;
 
     for (int i = 0; i < size; i++) {
-        temparr[i] = '_';
-        cout << "_";
+        cout << "_ ";
     }
     cout << endl;
 
-    while (loopcount < size && wrngcount < 8) {
+    while (correctGuesses < size && wrngcount < 8) {
         int wrngcheck = 0;
         char guess;
 
         cout << "\nGuess any letter of the Country's Name: ";
         cin >> guess;
 
+        if (guessedLetters.find(guess) != guessedLetters.end()) {
+            cout << "You have already guessed that letter. Try again.\n";
+            continue;
+        }
+
+        guessedLetters.insert(guess);
+
         for (int i = 0; i < size; i++) {
             if (y[i] == guess) {
                 temparr[i] = guess;
                 wrngcheck = 1;
+                correctGuesses++;
             }
         }
         
@@ -47,81 +57,84 @@ void game(const char* y) {
             wrngcount++;
         }
 
-        // Clear the console (note: system("CLS") works on Windows; you might need "clear" for Unix)
-        system("CLS");
+        // Clear the console (platform-independent)
+        cout << string(50, '\n');
 
-        for (int i = 0; i < size; i++) {
-            cout << temparr[i] << " ";
+        for (char c : temparr) {
+            cout << c << " ";
         }
         cout << endl;
 
-        if (wrngcount == 8) {
-            cout << "\n\n\n";
-            cout << "      ('')\n";
-            cout << "      ||/\n";
-            cout << "     / ||\n";
-            cout << "    /  \\ \n";
-            cout << "==============\n\n";
-            cout << " NO MORE CHANCES! YOU LOST!\n";
-        } else if (wrngcount == 7) {
-            cout << "\n\n\n";
-            cout << "      ('')\n";
-            cout << "      ||/\n";
-            cout << "     / ||\n";
-            cout << "    _/ \n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 1 Chance Left! Try Again\n";
-        } else if (wrngcount == 6) {
-            cout << "\n\n\n";
-            cout << "      ('')\n";
-            cout << "      ||/\n";
-            cout << "     / ||\n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 2 Chances Left! Try Again\n";
-        } else if (wrngcount == 5) {
-            cout << "\n\n\n";
-            cout << "       ( )\n";
-            cout << "        | \n";
-            cout << "     / \n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 3 Chances Left! Try Again\n";
-        } else if (wrngcount == 4) {
-            cout << "\n\n\n";
-            cout << "      ('')\n";
-            cout << "      _||\n";
-            cout << "     / \n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 4 Chances Left! Try Again\n";
-        } else if (wrngcount == 3) {
-            cout << "\n\n\n";
-            cout << "      ('')\n";
-            cout << "      _||\n";
-            cout << "     / \n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 5 Chances Left! Try Again\n";
-        } else if (wrngcount == 2) {
-            cout << "\n\n\n";
-            cout << "      ('')\n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 6 Chances Left! Try Again\n";
-        } else if (wrngcount == 1) {
-            cout << "\n\n\n";
-            cout << "      ('\n";
-            cout << "==============\n\n";
-            cout << "Wrong!! 7 Chances Left! Try Again\n";
-        } else {
-            cout << "\n\n8 Chances Left!";
-        }
-
-        loopcount = 0;
-        for (int i = 0; i < size; i++) {
-            if (temparr[i] == y[i]) {
-                loopcount++;
-            }
+        switch (wrngcount) {
+            case 8:
+                cout << "\n\n\n";
+                cout << "      ('')\n";
+                cout << "      ||/\n";
+                cout << "     / ||\n";
+                cout << "    /  \\ \n";
+                cout << "==============\n\n";
+                cout << " NO MORE CHANCES! YOU LOST!\n";
+                break;
+            case 7:
+                cout << "\n\n\n";
+                cout << "      ('')\n";
+                cout << "      ||/\n";
+                cout << "     / ||\n";
+                cout << "    _/ \n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 1 Chance Left! Try Again\n";
+                break;
+            case 6:
+                cout << "\n\n\n";
+                cout << "      ('')\n";
+                cout << "      ||/\n";
+                cout << "     / ||\n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 2 Chances Left! Try Again\n";
+                break;
+            case 5:
+                cout << "\n\n\n";
+                cout << "       ( )\n";
+                cout << "        | \n";
+                cout << "     / \n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 3 Chances Left! Try Again\n";
+                break;
+            case 4:
+                cout << "\n\n\n";
+                cout << "      ('')\n";
+                cout << "      _||\n";
+                cout << "     / \n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 4 Chances Left! Try Again\n";
+                break;
+            case 3:
+                cout << "\n\n\n";
+                cout << "      ('')\n";
+                cout << "      _||\n";
+                cout << "     / \n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 5 Chances Left! Try Again\n";
+                break;
+            case 2:
+                cout << "\n\n\n";
+                cout << "      ('')\n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 6 Chances Left! Try Again\n";
+                break;
+            case 1:
+                cout << "\n\n\n";
+                cout << "      ('\n";
+                cout << "==============\n\n";
+                cout << "Wrong!! 7 Chances Left! Try Again\n";
+                break;
+            default:
+                cout << "\n\n8 Chances Left!";
+                break;
         }
     }
 
-    if (loopcount == size) {
+    if (correctGuesses == size) {
         cout << "\n\nYOU WIN\n\n";
     } else {
         cout << "\n\nYOU LOSE\n";
@@ -136,7 +149,7 @@ void game(const char* y) {
     if (select == 0) {
         cout << " \n\nEXITING GAME\n\n";
     } else {
-        system("CLS");
+        cout << string(50, '\n');
         hangman();
     }
 }
